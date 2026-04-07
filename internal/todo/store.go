@@ -42,8 +42,24 @@ func Save(todos Todos) error {
 	return os.WriteFile(path, data, 0644)
 }
 
-func Add(task string) error {
-	return nil
+// adds new task to json file
+func Add(task string) (error, int) {
+	todos, err := Load()
+	if err != nil {
+		return err, 0
+	}
+	newTask := Task{
+		ID:          todos.NEXT_ID,
+		DESCRIPTION: task,
+		DONE:        false,
+	}
+	todos.TASKS = append(todos.TASKS, newTask)
+	todos.NEXT_ID++
+	err = Save(todos)
+	if err != nil {
+		return err, 0
+	}
+	return nil, newTask.ID
 }
 
 func MarkComplete(task_id int) error {

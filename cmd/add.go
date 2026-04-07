@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"my-cli/internal/todo"
 
 	"github.com/spf13/cobra"
 )
@@ -15,7 +16,11 @@ var addCmd = &cobra.Command{
 	Short: "Add a task",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add called")
+		err, id := todo.Add(args[0])
+		if err != nil {
+			fmt.Println("error:", err)
+		}
+		fmt.Println("Task Added with id: ", id)
 	},
 }
 
