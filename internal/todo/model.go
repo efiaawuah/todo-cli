@@ -7,6 +7,6 @@ type Task struct {
 }
 
 type Todos struct {
-	NEXT_ID int    `json:"next_id"`
-	TASKS   []Task `json:"tasks"`
+	NEXT_ID int          `json:"next_id"`
+	TASKS   map[int]Task `json:"tasks"`
 }

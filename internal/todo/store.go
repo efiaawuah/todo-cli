@@ -20,9 +20,9 @@ func Load() (Todos, error) {
 	file, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return Todos{NEXT_ID: 0, TASKS: []Task{}}, nil
+			return Todos{NEXT_ID: 0, TASKS: make(map[int]Task)}, nil
 		}
-		return Todos{NEXT_ID: 0, TASKS: []Task{}}, err
+		return Todos{NEXT_ID: 0, TASKS: make(map[int]Task)}, err
 	}
 	var todos Todos
 	err = json.Unmarshal(file, &todos)
@@ -53,7 +53,7 @@ func Add(task string) (error, int) {
 		DESCRIPTION: task,
 		DONE:        false,
 	}
-	todos.TASKS = append(todos.TASKS, newTask)
+	todos.TASKS[newTask.ID] = newTask
 	todos.NEXT_ID++
 	err = Save(todos)
 	if err != nil {
