@@ -2,6 +2,7 @@ package todo
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -63,11 +64,44 @@ func Add(task string) (error, int) {
 }
 
 func MarkComplete(task_id int) error {
+	todos, err := Load()
+	if err != nil {
+		return err
+	}
+	task, exists := todos.TASKS[task_id]
+	if !exists {
+		return fmt.Errorf("task not found")
+	}
+	task.DONE = true
+	todos.TASKS[task_id] = task
+	err = Save(todos)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func ListTasks(done *bool) []Task {
-	return nil
+func ListTasks(done *bool) (error, []Task) {
+	todos, err := Load()
+	if err != nil {
+		return err, nil
+	}
+	var task_list []Task
+
+	for _, task := range todos.TASKS {
+		if done == nil {
+			task_list = append(task_list, task)
+		} else if *done == true {
+			if task.DONE {
+				task_list = append(task_list, task)
+			}
+		} else {
+			if !task.DONE {
+				task_list = append(task_list, task)
+			}
+		}
+	}
+	return nil, task_list
 }
 
 func Delete(task_id int) error {
