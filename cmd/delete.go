@@ -5,6 +5,8 @@ package cmd
 
 import (
 	"fmt"
+	"my-cli/internal/todo"
+	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -14,7 +16,17 @@ var deleteCmd = &cobra.Command{
 	Use:   "delete [task_id]",
 	Short: "deletes task [task_id] from todo list",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("delete called")
+		id, err := strconv.Atoi(args[0])
+		if err != nil {
+			fmt.Println("invalid integer")
+			return
+		}
+		err = todo.Delete(id)
+		if err != nil {
+			fmt.Println("error:", err)
+			return
+		}
+		fmt.Println("task deleted")
 	},
 }
 

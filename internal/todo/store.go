@@ -105,5 +105,18 @@ func ListTasks(done *bool) (error, []Task) {
 }
 
 func Delete(task_id int) error {
+	todos, err := Load()
+	if err != nil {
+		return err
+	}
+	if _, exists := todos.TASKS[task_id]; exists {
+		delete(todos.TASKS, task_id)
+	} else {
+		return fmt.Errorf("task not found")
+	}
+	err = Save(todos)
+	if err != nil {
+		return err
+	}
 	return nil
 }
